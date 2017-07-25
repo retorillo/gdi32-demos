@@ -1,0 +1,9 @@
+version: 1.0.{build}
+image: Visual Studio 2017
+environment:
+  _PLATFORM_TOOLSET: v141
+  _TARGET_PLATFORM: 8.1
+artifacts:
+  - path: '**\*.exe'
+build_script:
+  - cmd: msbuild /p:Configuration=Debug /p:Platform=x86 pie\pie.xml
