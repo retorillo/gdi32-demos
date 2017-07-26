@@ -48,21 +48,36 @@ LRESULT WndProc(HWND hwnd, UINT m, WPARAM w, LPARAM l) {
       double c = count % STAGECOUNT;
       if (c == 0) { count++; c++; } // Skip when c = 0, because it is not pie but circle
       rad = (M_PI * 2) * (c / STAGECOUNT);
-      switch (static_cast<int>(floor((double)count / STAGECOUNT)) % 3) {
+      switch (static_cast<int>(floor((double)count / STAGECOUNT)) % 5) {
         case 0: 
           direction = AD_CLOCKWISE;
+          mapmode = MM_TEXT;
           sin_multiplier = 1;
-          note = L"(1/3) On clockwise, can use simply sin(rad) and cos(rad)";
+          note = L"(1/5) On clockwise, can use simply sin(rad) and cos(rad)";
           break;
         case 1: 
           direction = AD_COUNTERCLOCKWISE;
+          mapmode = MM_TEXT;
           sin_multiplier = 1;
-          note = L"(2/3) On counterclockwise, note that fill region is inverted unexpectedly";
+          note = L"(2/5) On counterclockwise, note that fill region is inverted unexpectedly";
           break;
         case 2: 
           direction = AD_COUNTERCLOCKWISE;
+          mapmode = MM_TEXT;
           sin_multiplier = -1;
-          note = L"(3/3) So, should be invert sin(rad) value on counterclockwise";
+          note = L"(3/5) So, should be invert sin(rad) value on counterclockwise";
+          break;
+        case 3:
+          direction = AD_CLOCKWISE;
+          mapmode = MM_HIENGLISH;
+          sin_multiplier = 1;
+          note = L"(3/5) With MM_HI* or MM_LO*, note that start point and direction is reversed!";
+          break;
+        case 4:
+          direction = AD_COUNTERCLOCKWISE;
+          mapmode = MM_HIENGLISH;
+          sin_multiplier = -1;
+          note = L"(5/5) So, looks like clockwise, but this is AD_COUNTERCLOCKWISE!!!";
           break;
       }
       InvalidateRect(hwnd, NULL, true);
@@ -77,11 +92,15 @@ LRESULT WndProc(HWND hwnd, UINT m, WPARAM w, LPARAM l) {
 void DrawFrame(HWND hwnd, HDC hdc) {
   if (count == 0) return;
 
+  SetGraphicsMode(hdc, GM_ADVANCED);
+  SetMapMode(hdc, mapmode);
+
   HBRUSH brush = CreateSolidBrush(RGB(180, 0, 100));
   HBRUSH oldbrush = reinterpret_cast<HBRUSH>(SelectObject(hdc, brush));
   
   RECT clientRect;
   GetClientRect(hwnd, &clientRect);
+  DPtoLP(hdc, reinterpret_cast<POINT*>(&clientRect), 2);
 
   int cw = clientRect.right - clientRect.left;
   int ch = clientRect.bottom - clientRect.top;
@@ -104,8 +123,9 @@ void DrawFrame(HWND hwnd, HDC hdc) {
     round(sin(rad) * sin_multiplier * r + r + piRect.top));
 
   WCHAR hudtext[256];
-  swprintf(hudtext, 256, L"%s\r\nDIR: %s\r\nCNT: %d\r\nRAD: %g\r\nCOS: %g\r\nSIN %g%s", 
-    note, direction == AD_COUNTERCLOCKWISE ? L"COUNTERCLOCKWISE" : L"CLOCKWISE",
+  swprintf(hudtext, 256, L"%s\r\nMAP: %s\r\nDIR: %s\r\nCNT: %d\r\nRAD: %g\r\nCOS: %g\r\nSIN %g%s", 
+    note, mapmode == MM_HIENGLISH ? L"MM_HIENGLISH" : L"MM_TEXT",
+    direction == AD_COUNTERCLOCKWISE ? L"AD_COUNTERCLOCKWISE" : L"AD_CLOCKWISE",
     count, rad, cos(rad), sin(rad), sin_multiplier == -1 ? L" * -1" : L"" );
   DrawText(hdc, hudtext, wcslen(hudtext), &clientRect, DT_WORDBREAK);
 

@@ -19,6 +19,7 @@ double rad = 0;
 int sin_multiplier;
 int direction;
 const WCHAR* note;
+int mapmode = MM_TEXT;
 
 int WinMain(HINSTANCE, HINSTANCE, LPSTR, int);
 LRESULT WndProc(HWND, UINT, WPARAM, LPARAM);
