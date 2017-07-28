@@ -10,13 +10,21 @@
     <WindowsTargetPlatformVersion>$(_TARGET_PLATFORM)</WindowsTargetPlatformVersion>
     <ConfigurationType>Application</ConfigurationType>
     <PlatformToolset>$(_PLATFORM_TOOLSET)</PlatformToolset>
-    <ProjectName>pie</ProjectName>
+    <ProjectName>transform</ProjectName>
   </PropertyGroup>
   <ItemGroup>
-    <ClCompile Include="pie.cpp" />
+    <ClCompile Include="transform.cpp" />
+    <ClCompile Include="../shared/gc.cpp" />
+    <ClCompile Include="../shared/dib.cpp" />
+    <ClCompile Include="../shared/net.cpp" />
+    <ClCompile Include="../shared/util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="pie.h" />
+    <ClInclude Include="transform.h" />
+    <ClInclude Include="../shared/gc.h" />
+    <ClInclude Include="../shared/dib.h" />
+    <ClInclude Include="../shared/net.h" />
+    <ClInclude Include="../shared/util.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.default.props" />
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
