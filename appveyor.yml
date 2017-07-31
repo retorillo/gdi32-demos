@@ -8,3 +8,4 @@ artifacts:
 build_script:
   - cmd: msbuild /p:Configuration=Debug /p:Platform=x86 pie\pie.xml
   - cmd: msbuild /p:Configuration=Debug /p:Platform=x86 transform\transform.xml
+  - cmd: msbuild /p:Configuration=Debug /p:Platform=x86 viewport\viewport.xml
